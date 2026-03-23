@@ -20,6 +20,7 @@ export async function POST(req: NextRequest) {
     website: body.website ?? null,
     rating: body.rating ?? null,
     has_online_presence: Boolean(body.has_online_presence),
+    has_social_media: Boolean(body.has_social_media),
     notes: body.notes ?? null,
     status: body.status ?? "new",
   });

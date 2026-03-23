@@ -47,6 +47,7 @@ export default function SearchPage() {
         website: result.websiteUri,
         rating: result.rating,
         has_online_presence: result.hasOnlinePresence,
+        has_social_media: result.hasSocialMedia,
         status: "new",
       }),
     });
