@@ -5,11 +5,22 @@ import { StatsCard } from "@/components/StatsCard";
 
 export default async function DashboardPage() {
   const user = await getCurrentUser();
-  const [leads, proposals, searches] = await Promise.all([
-    listLeads(user?.id),
-    listProposals(user?.id),
-    listSearches(user?.id),
-  ]);
+  let leads: any[] = [];
+  let proposals: any[] = [];
+  let searches: any[] = [];
+
+  try {
+    const data = await Promise.all([
+      listLeads(user?.id),
+      listProposals(user?.id),
+      listSearches(user?.id),
+    ]);
+    leads = data[0];
+    proposals = data[1];
+    searches = data[2];
+  } catch (err) {
+    console.error("Dashboard data fetch error:", err);
+  }
 
   return (
     <div className="space-y-8 animate-fade-in-up">

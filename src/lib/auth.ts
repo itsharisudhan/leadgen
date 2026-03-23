@@ -1,9 +1,18 @@
 import { createSupabaseServerClient } from "@/lib/supabase-server";
 
 export async function getCurrentUser() {
-  const supabase = await createSupabaseServerClient();
-  if (!supabase) return null;
+  try {
+    const supabase = await createSupabaseServerClient();
+    if (!supabase) return null;
 
-  const { data } = await supabase.auth.getUser();
-  return data.user ?? null;
+    const { data, error } = await supabase.auth.getUser();
+    if (error) {
+      console.warn("Auth check failed (likely no session):", error.message);
+      return null;
+    }
+    return data.user ?? null;
+  } catch (error) {
+    console.error("Critical auth error:", error);
+    return null;
+  }
 }

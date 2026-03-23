@@ -17,9 +17,14 @@ export async function createSupabaseServerClient() {
         return cookieStore.getAll();
       },
       setAll(cookieList) {
-        cookieList.forEach(({ name, value, options }) => {
-          cookieStore.set(name, value, options);
-        });
+        try {
+          cookieList.forEach(({ name, value, options }) => {
+            cookieStore.set(name, value, options);
+          });
+        } catch (error) {
+          // No-op: we can't set cookies during server-side rendering.
+          // The middleware/router handlers should handle session refreshing.
+        }
       },
     },
   });

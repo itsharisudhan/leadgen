@@ -3,7 +3,12 @@ import { Topbar } from "@/components/Topbar";
 import { getCurrentUser } from "@/lib/auth";
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const user = await getCurrentUser();
+  let user = null;
+  try {
+    user = await getCurrentUser();
+  } catch (e) {
+    console.error("DashboardLayout auth error:", e);
+  }
 
   return (
     <div className="min-h-screen md:flex bg-slate-950 text-slate-100">
