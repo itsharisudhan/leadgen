@@ -40,19 +40,66 @@ export default function SignupPage() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center px-4">
-      <form onSubmit={onSubmit} className="w-full max-w-md rounded-xl border border-slate-800 p-6 bg-slate-900/70 space-y-4">
-        <h1 className="text-2xl font-semibold">Create account</h1>
-        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required className="w-full px-3 py-2 rounded bg-slate-950 border border-slate-700" placeholder="Email" />
-        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} className="w-full px-3 py-2 rounded bg-slate-950 border border-slate-700" placeholder="Password" />
-        {error ? <p className="text-sm text-red-400">{error}</p> : null}
-        <button disabled={loading} className="w-full px-4 py-2 rounded bg-indigo-600 hover:bg-indigo-500 disabled:opacity-70">
-          {loading ? "Creating account..." : "Sign up"}
-        </button>
-        <p className="text-sm text-slate-400">
-          Already have an account? <Link className="text-indigo-400" href="/login">Login</Link>
-        </p>
-      </form>
+    <main className="min-h-screen bg-surface-950 flex items-center justify-center px-4 relative overflow-hidden font-sans">
+      {/* Background Blobs */}
+      <div className="blob w-[400px] h-[400px] bg-primary/20 top-[-100px] left-[-100px]" />
+      <div className="blob w-[300px] h-[300px] bg-accent/10 bottom-[10%] right-[-50px]" />
+
+      <Link href="/" className="absolute top-12 left-12 text-2xl font-black tracking-tighter hover:opacity-80 transition z-20">
+        LEAD<span className="gradient-text">GEN</span>
+      </Link>
+
+      <div className="w-full max-w-md relative z-10 animate-fade-in-up">
+        <form onSubmit={onSubmit} className="glass-card rounded-[2rem] p-10 border border-white/5 space-y-6">
+          <div className="space-y-2">
+            <h1 className="text-3xl font-black tracking-tight tracking-tighter">Establish <span className="gradient-text">Signal</span></h1>
+            <p className="text-sm text-slate-400 font-medium">Join the network and start capturing high-ticket leads.</p>
+          </div>
+
+          <div className="space-y-4">
+            <div className="space-y-1.5">
+              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Email ID</label>
+              <input 
+                type="email" 
+                value={email} 
+                onChange={(e) => setEmail(e.target.value)} 
+                required 
+                className="w-full px-5 py-3.5 rounded-xl bg-surface-900 border border-white/10 focus:border-primary/50 outline-none transition text-sm font-medium"
+                placeholder="operator@network.xyz" 
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Security Key</label>
+              <input 
+                type="password" 
+                value={password} 
+                onChange={(e) => setPassword(e.target.value)} 
+                required 
+                minLength={6}
+                className="w-full px-5 py-3.5 rounded-xl bg-surface-900 border border-white/10 focus:border-primary/50 outline-none transition text-sm font-medium"
+                placeholder="••••••••" 
+              />
+            </div>
+          </div>
+
+          {error ? (
+            <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 text-xs font-bold text-rose-400 animate-pulse">
+              ENCRYPTION ERROR: {error}
+            </div>
+          ) : null}
+
+          <button 
+            disabled={loading} 
+            className="w-full py-4 rounded-xl bg-white text-black font-black hover:scale-[1.02] active:scale-[0.98] transition shadow-[0_20px_40px_rgba(255,255,255,0.1)] disabled:opacity-70 text-sm uppercase tracking-widest"
+          >
+            {loading ? "INITIALIZING..." : "JOIN NETWORK"}
+          </button>
+
+          <p className="text-center text-xs text-slate-500 font-medium pt-2">
+            Already in network? <Link className="text-primary hover:underline font-bold" href="/login">Resume Session</Link>
+          </p>
+        </form>
+      </div>
     </main>
   );
 }
