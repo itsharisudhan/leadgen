@@ -10,6 +10,7 @@ export type Lead = {
   website: string | null;
   rating: number | null;
   has_online_presence: boolean;
+  has_social_media: boolean;
   notes: string | null;
   status: LeadStatus;
   created_at: string;
@@ -44,4 +45,5 @@ export type SearchResult = {
   googleMapsUri: string | null;
   hasWebsite: boolean;
   hasOnlinePresence: boolean;
+  hasSocialMedia: boolean;
 };

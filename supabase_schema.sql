@@ -17,6 +17,7 @@ create table if not exists public.saved_leads (
   website text,
   rating numeric,
   has_online_presence boolean not null default false,
+  has_social_media boolean not null default false,
   notes text,
   status text not null default 'new',
   created_at timestamptz not null default now(),

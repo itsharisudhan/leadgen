@@ -17,7 +17,9 @@ export function Sidebar() {
 
   return (
     <aside className="w-full md:w-64 border-r border-slate-800 bg-slate-950/70 md:min-h-screen">
-      <div className="p-5 border-b border-slate-800 text-lg font-bold">LeadGen</div>
+      <Link href="/" className="p-5 border-b border-slate-800 text-lg font-bold block hover:opacity-80 transition">
+        LeadGen
+      </Link>
       <nav className="p-3 space-y-1">
         {items.map((item) => {
           const active = pathname === item.href;

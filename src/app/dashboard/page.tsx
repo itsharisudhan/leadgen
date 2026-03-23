@@ -12,10 +12,13 @@ export default async function DashboardPage() {
   ]);
 
   return (
-    <div className="space-y-6">
-      <section>
-        <h1 className="text-2xl font-semibold">Dashboard</h1>
-        <p className="text-sm text-slate-400 mt-1">Track your searches, leads, and proposals in one place.</p>
+    <div className="space-y-8 animate-fade-in-up">
+      <section className="flex flex-col gap-1">
+        <h1 className="text-4xl font-black tracking-tighter">Dash<span className="gradient-text">board</span></h1>
+        <p className="text-sm text-slate-400 font-medium">Overview of your sales pipeline and recent activity.</p>
+        <div className="inline-flex items-center gap-2 mt-2 px-3 py-1 rounded-full bg-surface-800 border border-white/5 text-[10px] font-bold text-slate-500 w-fit uppercase tracking-widest">
+          Demo Mode Active
+        </div>
       </section>
 
       <section className="grid md:grid-cols-4 gap-4">
@@ -29,30 +32,36 @@ export default async function DashboardPage() {
         />
       </section>
 
-      <section className="grid md:grid-cols-3 gap-3">
-        <Link href="/dashboard/search" className="rounded-lg border border-slate-800 p-4 hover:bg-slate-900">
-          New Search
-        </Link>
-        <Link href="/dashboard/leads" className="rounded-lg border border-slate-800 p-4 hover:bg-slate-900">
-          View Saved Leads
-        </Link>
-        <Link href="/dashboard/proposals/new" className="rounded-lg border border-slate-800 p-4 hover:bg-slate-900">
-          Create Proposal
-        </Link>
+      <section className="grid md:grid-cols-3 gap-4">
+        {[
+          { href: "/dashboard/search", label: "START NEW SCAN", desc: "Find high-ticket businesses" },
+          { href: "/dashboard/leads", label: "MANAGE LEADS", desc: "Track your sales pipeline" },
+          { href: "/dashboard/proposals/new", label: "GENERATE PITCH", desc: "Create AI-powered proposals" }
+        ].map((item, i) => (
+          <Link key={i} href={item.href} className="glass-card p-6 rounded-2xl group border border-white/5">
+            <div className="text-[10px] font-bold text-primary tracking-widest mb-1 group-hover:translate-x-1 transition-transform">{item.label}</div>
+            <div className="text-sm text-slate-400 font-medium">{item.desc}</div>
+          </Link>
+        ))}
       </section>
 
-      <section className="rounded-xl border border-slate-800 p-4">
-        <h2 className="font-medium">Recent Searches</h2>
-        <div className="mt-3 space-y-2">
+      <section className="glass-card rounded-2xl overflow-hidden border border-white/5">
+        <div className="bg-white/5 p-4 border-b border-white/5 flex justify-between items-center">
+          <h2 className="text-xs font-black uppercase tracking-widest text-slate-400">Recent Activity</h2>
+          <Link href="/dashboard/search" className="text-[10px] font-bold text-primary hover:underline transition">VIEW ALL</Link>
+        </div>
+        <div className="p-4 space-y-3">
           {searches.length === 0 ? (
-            <p className="text-sm text-slate-500">No searches yet. Start from the Search page.</p>
+            <p className="text-sm text-slate-500 italic">No activity yet. Scan an area to begin.</p>
           ) : (
-            searches.map((item) => (
-              <div key={item.id} className="text-sm text-slate-300 flex justify-between">
-                <span>
-                  {item.query} in {item.location}
+            searches.slice(0, 5).map((item) => (
+              <div key={item.id} className="text-sm flex justify-between items-center p-3 rounded-xl hover:bg-white/[0.02] transition">
+                <span className="font-bold text-slate-300">
+                  {item.query} <span className="text-slate-500 font-normal">in</span> {item.location}
                 </span>
-                <span className="text-slate-500">{item.result_count} results</span>
+                <span className="text-[10px] font-black text-slate-600 px-2 py-1 rounded bg-white/5">
+                  {item.result_count} LEADS FOUND
+                </span>
               </div>
             ))
           )}

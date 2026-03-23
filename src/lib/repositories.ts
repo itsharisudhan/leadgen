@@ -3,6 +3,52 @@ import { createSupabaseServerClient } from "@/lib/supabase-server";
 import { makeId, mockStore, upsertMockLead } from "@/lib/mock-store";
 import type { Lead, Proposal, SearchRecord } from "@/lib/types";
 
+async function ensureUserStarterData(userId: string | undefined) {
+  if (!userId) return;
+
+  const supabase = await createSupabaseServerClient();
+  if (!supabase) return;
+
+  const { count, error: countError } = await supabase
+    .from("saved_leads")
+    .select("*", { count: "exact", head: true })
+    .eq("user_id", userId);
+
+  if (countError || (count ?? 0) > 0) return;
+
+  const seedLead = {
+    user_id: userId,
+    place_id: "starter_place_1",
+    name: "Sunrise Bakery",
+    address: "Anna Nagar, Chennai",
+    phone: "+91 90000 00001",
+    website: null,
+    rating: 3.9,
+    has_online_presence: false,
+    has_social_media: false,
+    notes: "Starter lead: no website or social media, good candidate for pitch.",
+    status: "new",
+  };
+
+  const { data: insertedLead } = await supabase.from("saved_leads").insert(seedLead).select("id").single();
+  await supabase.from("searches").insert({
+    user_id: userId,
+    query: "bakery",
+    location: "Chennai",
+    result_count: 2,
+  });
+
+  if (insertedLead?.id) {
+    await supabase.from("proposals").insert({
+      user_id: userId,
+      lead_id: insertedLead.id,
+      template: "Website Pitch",
+      content:
+        "Hi Sunrise Bakery team,\n\nI can help you launch a modern website to improve local discovery and daily orders.\n\nCan we do a quick 15-minute call this week?\n\nThanks,\nYour Name",
+    });
+  }
+}
+
 export async function saveSearch(userId: string | undefined, query: string, location: string, resultCount: number) {
   const supabase = await createSupabaseServerClient();
   if (supabase && userId) {
@@ -27,6 +73,7 @@ export async function saveSearch(userId: string | undefined, query: string, loca
 }
 
 export async function listSearches(userId: string | undefined) {
+  await ensureUserStarterData(userId);
   const supabase = await createSupabaseServerClient();
   if (supabase && userId) {
     const { data, error } = await supabase
@@ -54,6 +101,7 @@ export async function saveLead(input: Omit<Lead, "id" | "created_at">) {
 }
 
 export async function listLeads(userId: string | undefined) {
+  await ensureUserStarterData(userId);
   const supabase = await createSupabaseServerClient();
   if (supabase && userId) {
     const { data, error } = await supabase
@@ -90,6 +138,7 @@ export async function deleteLead(id: string) {
 }
 
 export async function listProposals(userId: string | undefined) {
+  await ensureUserStarterData(userId);
   const supabase = await createSupabaseServerClient();
   if (supabase && userId) {
     const { data, error } = await supabase
@@ -125,6 +174,7 @@ export async function exportLeadsAsCsv(userId: string | undefined) {
       address: lead.address,
       phone: lead.phone ?? "",
       website: lead.website ?? "",
+      social: lead.has_social_media ? "Yes" : "No",
       rating: lead.rating ?? "",
       status: lead.status,
       notes: lead.notes ?? "",
